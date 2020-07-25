@@ -1,0 +1,28 @@
+{
+	"name": "crouxjs",
+	"version": "0.0.1-SNAPSHOT",
+	"description": "A simple library to write custom shell commands using javascript",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"build": "tsc",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/crouxjs/crouxjs.git"
+	},
+	"keywords": [],
+	"author": "Roux",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/crouxjs/crouxjs/issues"
+	},
+	"homepage": "https://github.com/crouxjs/crouxjs#readme",
+	"dependencies": {
+		"typescript": "^3.9.7"
+	},
+	"devDependencies": {
+		"@types/node": "^14.0.25"
+	}
+}
