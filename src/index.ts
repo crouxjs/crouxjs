@@ -1,10 +1,13 @@
 import shelljs from "shelljs";
 import { isObject } from "util";
+import { ChildProcess } from "child_process";
 export const shell = shelljs;
 
 export interface UseFonction {
-	(path: string, command: string): Promise<any>;
-	(path: string, command: string, options: shelljs.ExecOptions): Promise<any>;
+	(path: string, command: string): Promise<unknown>;
+	(path: string, command: string, options: shelljs.ExecOptions): Promise<
+		unknown
+	>;
 	(path: string, command: string, callback: shelljs.ExecCallback): void;
 	(
 		path: string,
@@ -21,19 +24,22 @@ export const use: UseFonction = function (
 	callback?: shelljs.ExecCallback,
 ): any {
 	if (options == null) {
-		return usePromise(command);
+		return _usePromise(command);
 	} else if (isObject(options)) {
 		if (callback) {
-			useCallback(command, callback, options);
+			return _useCallback(command, callback, options);
 		} else {
-			return usePromise(command, options);
+			return _usePromise(command, options);
 		}
 	} else {
-		useCallback(command, (callback = options));
+		return _useCallback(command, (callback = options));
 	}
 };
 
-function usePromise(command: string, options: shelljs.ExecOptions = {}) {
+function _usePromise(
+	command: string,
+	options: shelljs.ExecOptions = {},
+): Promise<unknown> {
 	console.log("using promise !");
 	return new Promise((resolve, reject) => {
 		shell.exec(command, options, (code, stdout, stderr) => {
@@ -43,11 +49,11 @@ function usePromise(command: string, options: shelljs.ExecOptions = {}) {
 	});
 }
 
-function useCallback(
+function _useCallback(
 	command: string,
 	callback: shelljs.ExecCallback,
 	options: shelljs.ExecOptions = {},
-) {
+): ChildProcess {
 	console.log("using callback !");
-	shell.exec(command, options, callback);
+	return shell.exec(command, options, callback);
 }
