@@ -1,4 +1,5 @@
 import shelljs from "shelljs";
+import path from "path";
 
 interface Library {
 	[key: string]: ArgCallback;
@@ -17,23 +18,23 @@ export function execPromise(command: string, options: shelljs.ExecOptions) {
 	});
 }
 
-declare type ArgCallback = (args: string[]) => void;
+export type ArgCallback = (args: string[]) => void;
 
-export function use(path: string, exec: ArgCallback) {
-	const pathDeepObject = makeExecuteObject(path, exec);
+export function use(command: string, exec: ArgCallback) {
+	const pathDeepObject = makeExecuteObject(command, exec);
 	library = {
 		...library,
 		...pathDeepObject,
 	};
 }
 
-export function build() {
+export function build(folder: string) {
 	console.error("Not implemented yet !");
 }
 
-function makeExecuteObject(path: string, exec: ArgCallback): Library {
-	let pathDeepObject = makeDeepObject(path);
-	let args = path.split(" ");
+function makeExecuteObject(command: string, exec: ArgCallback): Library {
+	let pathDeepObject = makeDeepObject(command);
+	let args = command.split(" ");
 	let node = getToDeepestObject(pathDeepObject, args);
 	node[args[args.length - 1]] = exec;
 	return pathDeepObject;
@@ -51,10 +52,10 @@ interface RecursiveObject {
 	[key: string]: RecursiveObject;
 }
 
-function makeDeepObject(path: string): any {
+function makeDeepObject(command: string): any {
 	let src: RecursiveObject = {};
 	let node = src;
-	path.split(" ").forEach((value) => {
+	command.split(" ").forEach((value) => {
 		node[value] = {};
 		node = node[value];
 	});
