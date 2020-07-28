@@ -1,36 +1,41 @@
 import shelljs from "shelljs";
-import path from "path";
+
+class Crouxjs {
+	library: Library = {};
+
+	exec = shelljs.exec;
+
+	execPromise(command: string, options: shelljs.ExecOptions) {
+		return new Promise((resolve, reject) => {
+			this.exec(command, options, (code, stdout, stderr) => {
+				if (code != 0) reject(stderr);
+				else resolve(stdout);
+			});
+		});
+	}
+
+	use(command: string, exec: ArgCallback) {
+		const pathDeepObject = makeExecuteObject(command, exec);
+		this.library = {
+			...this.library,
+			...pathDeepObject,
+		};
+	}
+
+	build(folder: string) {
+		console.error("Not implemented yet !");
+	}
+}
+
+const croux = () => new Crouxjs();
+
+export = croux;
 
 interface Library {
 	[key: string]: ArgCallback;
 }
 
-export let library: Library = {};
-
-export const exec = shelljs.exec;
-
-export function execPromise(command: string, options: shelljs.ExecOptions) {
-	return new Promise((resolve, reject) => {
-		exec(command, options, (code, stdout, stderr) => {
-			if (code != 0) reject(stderr);
-			else resolve(stdout);
-		});
-	});
-}
-
-export type ArgCallback = (args: string[]) => void;
-
-export function use(command: string, exec: ArgCallback) {
-	const pathDeepObject = makeExecuteObject(command, exec);
-	library = {
-		...library,
-		...pathDeepObject,
-	};
-}
-
-export function build(folder: string) {
-	console.error("Not implemented yet !");
-}
+type ArgCallback = (args: string[]) => void;
 
 function makeExecuteObject(command: string, exec: ArgCallback): Library {
 	let pathDeepObject = makeDeepObject(command);
@@ -53,11 +58,11 @@ interface RecursiveObject {
 }
 
 function makeDeepObject(command: string): any {
-	let src: RecursiveObject = {};
-	let node = src;
+	let nodeTree: RecursiveObject = {};
+	let node = nodeTree;
 	command.split(" ").forEach((value) => {
 		node[value] = {};
 		node = node[value];
 	});
-	return src;
+	return nodeTree;
 }
