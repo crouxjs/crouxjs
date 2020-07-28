@@ -1,5 +1,15 @@
 import shelljs from 'shelljs';
 
+type ArgCallback = (args: string[]) => void;
+
+interface Library {
+  [key: string]: ArgCallback;
+}
+
+interface RecursiveObject {
+  [key: string]: RecursiveObject;
+}
+
 class Crouxjs {
   library: Library = {};
 
@@ -15,54 +25,40 @@ class Crouxjs {
   }
 
   use(command: string, exec: ArgCallback) {
-    const pathDeepObject = makeExecuteObject(command, exec);
+    const pathDeepObject = this.makeExecuteObject(command, exec);
     this.library = {
       ...this.library,
       ...pathDeepObject,
     };
   }
 
-  // build(folder: string) {
-  //   console.error('Not implemented yet !');
-  // }
+  private makeExecuteObject(command: string, exec: ArgCallback): Library {
+    const pathDeepObject = this.makeDeepObject(command);
+    const args = command.split(' ');
+    const node = this.getToDeepestObject(pathDeepObject, args);
+    node[args[args.length - 1]] = exec;
+    return pathDeepObject;
+  }
+
+  private getToDeepestObject(pathDeepObject: any, args: string[]): Library {
+    let node = pathDeepObject;
+    for (let i = 0; i < args.length - 1; i += 1) {
+      node = node[args[i]];
+    }
+    return node;
+  }
+
+  private makeDeepObject(command: string): any {
+    const nodeTree: RecursiveObject = {};
+    let node = nodeTree;
+    command.split(' ').forEach((value) => {
+      node[value] = {};
+      node = node[value];
+    });
+    return nodeTree;
+  }
 }
 
-const croux = () => new Crouxjs();
+const croux = (): Crouxjs => new Crouxjs();
 
 export = croux;
-
-interface Library {
-  [key: string]: ArgCallback;
-}
-
-type ArgCallback = (args: string[]) => void;
-
-function makeExecuteObject(command: string, exec: ArgCallback): Library {
-  const pathDeepObject = makeDeepObject(command);
-  const args = command.split(' ');
-  const node = getToDeepestObject(pathDeepObject, args);
-  node[args[args.length - 1]] = exec;
-  return pathDeepObject;
-}
-
-function getToDeepestObject(pathDeepObject: any, args: string[]): Library {
-  let node = pathDeepObject;
-  for (let i = 0; i < args.length - 1; i += 1) {
-    node = node[args[i]];
-  }
-  return node;
-}
-
-interface RecursiveObject {
-  [key: string]: RecursiveObject;
-}
-
-function makeDeepObject(command: string): any {
-  const nodeTree: RecursiveObject = {};
-  let node = nodeTree;
-  command.split(' ').forEach((value) => {
-    node[value] = {};
-    node = node[value];
-  });
-  return nodeTree;
-}
