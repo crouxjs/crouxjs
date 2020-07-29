@@ -12,6 +12,9 @@
   },
   "plugins": ["@typescript-eslint"],
   "rules": {
+    "no-unused-vars": "warn",
+    "no-unused-expressions": "warn",
+    "no-unused-labels": "warn",
     "no-use-before-define": "warn",
     "no-undef": "warn",
     "class-methods-use-this": "off"
