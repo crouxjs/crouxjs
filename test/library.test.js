@@ -9,7 +9,7 @@ beforeEach(() => {
 });
 
 test('Library is not undefined WHEN creating a new app instance', () => {
-  expect(app.library).not.toBeUndefined();
+  expect(app.library).toBeDefined();
 });
 
 test('Library is empty WHEN creating a new app instance', () => {
