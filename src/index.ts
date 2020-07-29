@@ -1,4 +1,5 @@
 import shelljs from 'shelljs';
+import { merge } from 'lodash';
 
 type ArgCallback = (args: string[]) => void;
 
@@ -25,30 +26,27 @@ class Crouxjs {
   }
 
   use(command: string, exec: ArgCallback) {
-    const pathDeepObject = this.makeExecuteObject(command, exec);
-    this.library = {
-      ...this.library,
-      ...pathDeepObject,
-    };
+    const pathDeepObject = this.#makeExecuteObject(command, exec);
+    merge(this.library, pathDeepObject);
   }
 
-  private makeExecuteObject(command: string, exec: ArgCallback): Library {
-    const pathDeepObject = this.makeDeepObject(command);
+  #makeExecuteObject = (command: string, exec: ArgCallback): Library => {
+    const pathDeepObject = this.#makeDeepObject(command);
     const args = command.split(' ');
-    const node = this.getToDeepestObject(pathDeepObject, args);
+    const node = this.#getToDeepestObject(pathDeepObject, args);
     node[args[args.length - 1]] = exec;
     return pathDeepObject;
-  }
+  };
 
-  private getToDeepestObject(pathDeepObject: any, args: string[]): Library {
+  #getToDeepestObject = (pathDeepObject: any, args: string[]): Library => {
     let node = pathDeepObject;
     for (let i = 0; i < args.length - 1; i += 1) {
       node = node[args[i]];
     }
     return node;
-  }
+  };
 
-  private makeDeepObject(command: string): any {
+  #makeDeepObject = (command: string): any => {
     const nodeTree: RecursiveObject = {};
     let node = nodeTree;
     command.split(' ').forEach((value) => {
@@ -56,7 +54,7 @@ class Crouxjs {
       node = node[value];
     });
     return nodeTree;
-  }
+  };
 }
 
 const croux = (): Crouxjs => new Crouxjs();
