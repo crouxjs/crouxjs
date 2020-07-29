@@ -1,6 +1,6 @@
 {
   "name": "crouxjs",
-  "version": "0.0.0-SNAPSHOT",
+  "version": "1.0.0-SNAPSHOT",
   "description": "A simple library to write custom shell commands using javascript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
