@@ -1,7 +1,8 @@
 import shelljs from 'shelljs';
 import { merge } from 'lodash';
+import CommandRequest from './request';
 
-type ArgCallback = (args: string[]) => void;
+type ArgCallback = (args: CommandRequest) => void;
 
 interface Library {
   [key: string]: ArgCallback;
@@ -25,9 +26,9 @@ class Crouxjs {
     });
   }
 
-  use(command: string, exec: ArgCallback) {
-    const pathDeepObject = this.#makeExecuteObject(command, exec);
-    merge(this.library, pathDeepObject);
+  use(command: string, fn: ArgCallback) {
+    const commandDeepObject = this.#makeExecuteObject(command, fn);
+    merge(this.library, commandDeepObject);
   }
 
   #makeExecuteObject = (command: string, exec: ArgCallback): Library => {

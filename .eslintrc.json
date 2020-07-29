@@ -2,10 +2,13 @@
   "env": {
     "es2020": true,
     "node": true,
-    "jest": true,
-    "shelljs": true
+    "jest": true
   },
-  "extends": ["airbnb-base"],
+  "extends": [
+    "airbnb-base",
+    "prettier/@typsescript-eslint",
+    "plugin:prettier/recommended"
+  ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 11
@@ -17,6 +20,7 @@
     "no-unused-labels": "warn",
     "no-use-before-define": "warn",
     "no-undef": "warn",
+    "prefer-const": "warn",
     "class-methods-use-this": "off"
   }
 }
