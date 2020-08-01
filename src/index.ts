@@ -1,10 +1,8 @@
 import shelljs from 'shelljs';
-import { merge } from 'lodash';
-import CommandRequest from './request';
+const shell = require('async-shelljs');
+import { ArgCallback, Library } from './library';
 
-type ArgCallback = (args: CommandRequest) => void;
-
-interface Library {
+interface ILibrary {
   [key: string]: ArgCallback;
 }
 
@@ -13,33 +11,25 @@ interface RecursiveObject {
 }
 
 class Crouxjs {
-  library: Library = {};
+  library: Library = new Library();
 
   exec = shelljs.exec;
+  asyncExec = shell.asyncExec;
 
-  execPromise(command: string, options: shelljs.ExecOptions) {
-    return new Promise((resolve, reject) => {
-      this.exec(command, options, (code, stdout, stderr) => {
-        if (code !== 0) reject(stderr);
-        else resolve(stdout);
-      });
-    });
+  use(command: string, callback: ArgCallback) {
+    const commandDeepObject = this.#makeExecuteObject(command, callback);
+    this.library.add(commandDeepObject);
   }
 
-  use(command: string, fn: ArgCallback) {
-    const commandDeepObject = this.#makeExecuteObject(command, fn);
-    merge(this.library, commandDeepObject);
-  }
-
-  #makeExecuteObject = (command: string, exec: ArgCallback): Library => {
+  #makeExecuteObject = (command: string, callback: ArgCallback): Library => {
     const pathDeepObject = this.#makeDeepObject(command);
     const args = command.split(' ');
     const node = this.#getToDeepestObject(pathDeepObject, args);
-    node[args[args.length - 1]] = exec;
+    node[args[args.length - 1]] = callback;
     return pathDeepObject;
   };
 
-  #getToDeepestObject = (pathDeepObject: any, args: string[]): Library => {
+  #getToDeepestObject = (pathDeepObject: any, args: string[]): ILibrary => {
     let node = pathDeepObject;
     for (let i = 0; i < args.length - 1; i += 1) {
       node = node[args[i]];

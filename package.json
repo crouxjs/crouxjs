@@ -22,6 +22,7 @@
   "homepage": "https://github.com/crouxjs/crouxjs#readme",
   "dependencies": {
     "@types/shelljs": "^0.8.8",
+    "async-shelljs": "^0.1.4",
     "shelljs": "^0.8.4",
     "typescript": "^3.9.7"
   },
