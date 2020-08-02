@@ -23,7 +23,7 @@ describe('Requests testing, fields, methods, all of it', () => {
     app.use(rawCommand, (req) => {
       expect(req).toBeDefined();
       expect(req.raw).toBeDefined();
-      expect(req.raw).toBe(rawCommand);
+      expect(req.raw).toStrictEqual(rawCommand);
     });
     app.library.request(rawCommand);
   });
@@ -33,7 +33,17 @@ describe('Requests testing, fields, methods, all of it', () => {
     app.use(rawCommand, (req) => {
       expect(req).toBeDefined();
       expect(req.params).toBeDefined();
-      expect(req.params).toStrictEqual(rawCommand.split(' '));
+      expect(req.params).toHaveLength(5);
+    });
+    app.library.request(rawCommand);
+  });
+
+  test('Request:params is indeed an array of given badly written command arguments', () => {
+    const rawCommand = 'test   raw   given  command @arg0';
+    app.use(rawCommand, (req) => {
+      expect(req).toBeDefined();
+      expect(req.params).toBeDefined();
+      expect(req.params).toHaveLength(5);
     });
     app.library.request(rawCommand);
   });
