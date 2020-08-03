@@ -14,30 +14,30 @@ describe('Library testing', () => {
   });
 
   test('Library is empty WHEN creating a new app instance', () => {
-    expect(app.library.size()).toHaveLength(0);
+    expect(app.library.size()).toStrictEqual(0);
   });
 
   test('Library has 1 command WHEN calling app.use([...]) once', () => {
     app.use('test', () => {});
-    expect(app.library.size()).toHaveLength(1);
+    expect(app.library.size()).toStrictEqual(1);
   });
 
   test('Library has 1 command WHEN calling app.use([...]) twice with the exact same command', () => {
     app.use('test', () => {});
     app.use('test', () => {});
-    expect(app.library.size()).toHaveLength(1);
+    expect(app.library.size()).toStrictEqual(1);
   });
 
   test('Library has 2 commands WHEN calling app.use([...]) twice using differents names', () => {
     app.use('start', () => {});
     app.use('stop', () => {});
-    expect(app.library.size()).toHaveLength(2);
+    expect(app.library.size()).toStrictEqual(2);
   });
 
   test('Library has 1 entry WHEN calling app.use([...]) twice names with same first keyword', () => {
     app.use('test start', () => {});
     app.use('test stop', () => {});
-    expect(app.library.size()).toHaveLength(1);
+    expect(app.library.size()).toStrictEqual(2);
   });
 });
 
@@ -74,7 +74,7 @@ describe('App use & library requests', () => {
       await app.asyncExec('echo hello', { silent: true }).then(
         (data) => {
           // Needed because stupid fuck return '\n'
-          data = data.split('\r')[0];
+          data = data.split('\n')[0];
           expect(data).toBeDefined();
           expect(data).toEqual('hello');
         },
@@ -83,6 +83,6 @@ describe('App use & library requests', () => {
         }
       );
     });
-    await app.library.request('echo hello');
+    await app.library.request('test');
   });
 });
