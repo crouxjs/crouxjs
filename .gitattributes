@@ -1,2 +1,4 @@
-# test/** linguist-vendored
+dist/ linguist-vendored
+cache/ linguist-vendored
+test/ linguist-vendored
 jest.config.js linguist-vendored
