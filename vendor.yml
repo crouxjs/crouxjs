@@ -9,6 +9,8 @@
 
 ## Vendor Conventions ##
 
+- (^|/)test/
+
 # Caches
 - (^|/)cache/
 
