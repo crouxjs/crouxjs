@@ -23,7 +23,7 @@ jobs:
 
     # Runs a set of commands using the runners shell
     - name: Jest Coverage Report with Logs
-      uses: crouxjs/jest-coverage-workflow@V1.1
+      uses: crouxjs/jest-coverage-workflow@v1.1
       with:
         # Github token
         github-token: ${{ secrets.GITHUB_TOKEN }}
