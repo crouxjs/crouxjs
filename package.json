@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "link": "npm link && npm link crouxjs",
-    "test": "jest"
+    "test": "jest && codecov"
   },
   "repository": {
     "type": "git",
